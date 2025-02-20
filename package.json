@@ -7,7 +7,7 @@
     },
     "dependencies": {
         "express": "^4.18.2",
-        "mongodb": "^6.3.0",
         "dotenv": "^16.4.5"
-    }
+    },
+    "license": "MIT" // License जोड़ा, ताकि वॉर्निंग न आए
 }
