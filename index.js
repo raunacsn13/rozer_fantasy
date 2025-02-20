@@ -13,7 +13,12 @@ const validateTransaction = [
   body('amount').isFloat({ min: 0 }).withMessage('Amount must be a positive number')
 ];
 
-// जमा API
+// **होम रूट (Fix for "Cannot GET /")**
+app.get('/', (req, res) => {
+  res.send('Server is Running!');
+});
+
+// **जमा (Deposit) API**
 app.post('/deposit', validateTransaction, (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -35,7 +40,7 @@ app.post('/deposit', validateTransaction, (req, res) => {
   });
 });
 
-// निकासी API
+// **निकासी (Withdraw) API**
 app.post('/withdraw', validateTransaction, (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -61,7 +66,7 @@ app.post('/withdraw', validateTransaction, (req, res) => {
   });
 });
 
-// चैट API (इन-मेमोरी स्टोरेज के साथ, MongoDB के बिना)
+// **चैट API (Chat)**
 const chats = []; // इन-मेमोरी चैट स्टोरेज
 
 app.post('/chat', [
@@ -90,7 +95,7 @@ app.post('/chat', [
   });
 });
 
-// चैट हिस्ट्री प्राप्त करने के लिए GET API (ऑप्शनल)
+// **चैट हिस्ट्री API**
 app.get('/chat/history', (req, res) => {
   res.status(200).json({
     success: true,
@@ -98,6 +103,6 @@ app.get('/chat/history', (req, res) => {
   });
 });
 
-// सर्वर शुरू करें
+// **सर्वर स्टार्ट**
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
