@@ -1,65 +1,102 @@
 const express = require('express');
-require('dotenv').config();
+const { body, validationResult } = require('express-validator');
 
 const app = express();
 app.use(express.json());
 
-// सैंपल यूज़र डेटा (इन-मेमोरी स्टोरेज, MongoDB के बिना)
+// इन-मेमोरी उपयोगकर्ता डेटा (MongoDB के बिना)
 const users = {};
 
-app.get('/', (req, res) => {
-    res.send('Rozer Fantasy App is running!');
+// इनपुट वैलिडेशन मिडलवेयर
+const validateTransaction = [
+  body('username').trim().notEmpty().withMessage('Username is required and cannot be empty'),
+  body('amount').isFloat({ min: 0 }).withMessage('Amount must be a positive number')
+];
+
+// जमा एंडपॉइंट
+app.post('/deposit', validateTransaction, (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { username, amount } = req.body;
+
+  if (!users[username]) {
+    users[username] = { balance: 0 }; // नया उपयोगकर्ता बनाएं
+  }
+
+  users[username].balance += amount;
+
+  res.status(200).json({
+    success: true,
+    message: Deposited ${amount}. New balance: ${users[username].balance},
+    balance: users[username].balance
+  });
 });
 
-// साइन अप
-app.post('/signup', (req, res) => {
-    const { username, password } = req.body;
-    if (users[username]) {
-        return res.status(400).json({ error: 'Username already exists' });
-    }
-    users[username] = { password, balance: 0 };
-    res.json({ message: 'Signup successful! Please login.' });
+// निकासी एंडपॉइंट
+app.post('/withdraw', validateTransaction, (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { username, amount } = req.body;
+
+  if (!users[username]) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+
+  if (users[username].balance < amount) {
+    return res.status(400).json({ error: 'Insufficient balance' });
+  }
+
+  users[username].balance -= amount;
+
+  res.status(200).json({
+    success: true,
+    message: Withdrawn ${amount}. New balance: ${users[username].balance},
+    balance: users[username].balance
+  });
 });
 
-// लॉगिन
-app.post('/login', (req, res) => {
-    const { username, password } = req.body;
-    if (!users[username] || users[username].password !== password) {
-        return res.status(400).json({ error: 'Invalid username or password' });
-    }
-    res.json({ message: 'Login successful!' });
+// चैट एंडपॉइंट (इन-मेमोरी स्टोरेज के साथ, MongoDB के बिना)
+const chats = []; // इन-मेमोरी चैट स्टोरेज
+
+app.post('/chat', [
+  body('sender').trim().notEmpty().withMessage('Sender is required'),
+  body('receiver').trim().notEmpty().withMessage('Receiver is required'),
+  body('message').trim().notEmpty().withMessage('Message is required')
+], (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { sender, receiver, message } = req.body;
+  const newChat = {
+    sender,
+    receiver,
+    message,
+    timestamp: new Date()
+  };
+  chats.push(newChat);
+
+  res.status(201).json({
+    success: true,
+    message: 'Message sent successfully',
+    chat: newChat
+  });
 });
 
-// डिपॉजिट
-app.post('/deposit', (req, res) => {
-    const { username, amount } = req.body;
-    if (!users[username]) {
-        return res.status(400).json({ error: 'User not found' });
-    }
-    users[username].balance += amount;
-    res.json({ message: Deposited ${amount}. New balance: ${users[username].balance} });
+// चैट हिस्ट्री प्राप्त करने के लिए GET एंडपॉइंट (ऑप्शनल)
+app.get('/chat/history', (req, res) => {
+  res.status(200).json({
+    success: true,
+    chats: chats
+  });
 });
 
-// विड्रॉल
-app.post('/withdraw', (req, res) => {
-    const { username, amount } = req.body;
-    if (!users[username]) {
-        return res.status(400).json({ error: 'User not found' });
-    }
-    if (users[username].balance < amount) {
-        return res.status(400).json({ error: 'Insufficient balance' });
-    }
-    users[username].balance -= amount;
-    res.json({ message: Withdrawn ${amount}. New balance: ${users[username].balance} });
-});
-
-// चैट सपोर्ट (MongoDB के बिना, साधारण जवाब)
-app.post('/chat', (req, res) => {
-    const { message } = req.body;
-    const reply = आपने कहा: ${message}। हमने इसे रिकॉर्ड किया। (AI सपोर्ट अभी उपलब्ध नहीं है।);
-    res.json({ reply });
-});
-
-app.listen(process.env.PORT || 3000, () => {
-    console.log('Server running');
-});
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(Server running on port ${PORT}));
