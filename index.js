@@ -30,7 +30,7 @@ app.post('/deposit', validateTransaction, (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: Deposited ${(amount)}. New balance: ${users[username].balance},
+    message: Deposited $(amount). New balance: ${users[username].balance},
     balance: users[username].balance
   });
 });
