@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Razer Fantasy - Banking & Chat</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Razer Fantasy</h1>
+
+    <!-- Deposit Form -->
+    <div class="section">
+      <h2>Deposit</h2>
+      <form id="depositForm">
+        <input type="text" id="depositUsername" placeholder="Username" required>
+        <input type="number" id="depositAmount" placeholder="Amount" step="0.01" required>
+        <button type="submit">Deposit</button>
+      </form>
+      <p id="depositResult"></p>
+    </div>
+
+    <!-- Withdraw Form -->
+    <div class="section">
+      <h2>Withdraw</h2>
+      <form id="withdrawForm">
+        <input type="text" id="withdrawUsername" placeholder="Username" required>
+        <input type="number" id="withdrawAmount" placeholder="Amount" step="0.01" required>
+        <button type="submit">Withdraw</button>
+      </form>
+      <p id="withdrawResult"></p>
+    </div>
+
+    <!-- Chat Form -->
+    <div class="section">
+      <h2>Send Chat</h2>
+      <form id="chatForm">
+        <input type="text" id="chatSender" placeholder="Sender" required>
+        <input type="text" id="chatReceiver" placeholder="Receiver" required>
+        <input type="text" id="chatMessage" placeholder="Message" required>
+        <button type="submit">Send</button>
+      </form>
+      <p id="chatResult"></p>
+    </div>
+
+    <!-- Chat History -->
+    <div class="section">
+      <h2>Chat History</h2>
+      <button id="loadHistory">Load Chat History</button>
+      <ul id="chatHistory"></ul>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
