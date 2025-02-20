@@ -8,7 +8,7 @@ app.use(express.json());
 const users = {};
 
 app.get('/', (req, res) => {
-    res.send('Fantasy King App is running!');
+    res.send('Rozer Fantasy App is running!');
 });
 
 // साइन अप
