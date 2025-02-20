@@ -13,7 +13,7 @@ const validateTransaction = [
   body('amount').isFloat({ min: 0 }).withMessage('Amount must be a positive number')
 ];
 
-// जमा एNDपॉइंट
+// जमा API
 app.post('/deposit', validateTransaction, (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -30,12 +30,12 @@ app.post('/deposit', validateTransaction, (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: `Withdrawn ${amount}. New balance: ${users[username].balance}`,
+    message: `Deposited ${amount}. New balance: ${users[username].balance}`,
     balance: users[username].balance
   });
 });
 
-// निकासी एNDपॉइंट
+// निकासी API
 app.post('/withdraw', validateTransaction, (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -56,12 +56,12 @@ app.post('/withdraw', validateTransaction, (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: Withdrawn ${amount}. New balance: ${users[username].balance},
+    message: `Withdrawn ${amount}. New balance: ${users[username].balance}`,
     balance: users[username].balance
   });
 });
 
-// चैट एNDपॉइंट (इन-मेमोरी स्टोरेज के साथ, MongoDB के बिना)
+// चैट API (इन-मेमोरी स्टोरेज के साथ, MongoDB के बिना)
 const chats = []; // इन-मेमोरी चैट स्टोरेज
 
 app.post('/chat', [
@@ -90,7 +90,7 @@ app.post('/chat', [
   });
 });
 
-// चैट हिस्ट्री प्राप्त करने के लिए GET एNDपॉइंट (ऑप्शनल)
+// चैट हिस्ट्री प्राप्त करने के लिए GET API (ऑप्शनल)
 app.get('/chat/history', (req, res) => {
   res.status(200).json({
     success: true,
@@ -98,5 +98,6 @@ app.get('/chat/history', (req, res) => {
   });
 });
 
+// सर्वर शुरू करें
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(Server running on port ${PORT}));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
