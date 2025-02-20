@@ -13,7 +13,7 @@ const validateTransaction = [
   body('amount').isFloat({ min: 0 }).withMessage('Amount must be a positive number')
 ];
 
-// जमा एंडपॉइंट
+// जमा एNDपॉइंट
 app.post('/deposit', validateTransaction, (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -30,12 +30,12 @@ app.post('/deposit', validateTransaction, (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: Deposited $(amount). New balance: ${users[username].balance},
+    message: Deposited ${amount}. New balance: ${users[username].balance},
     balance: users[username].balance
   });
 });
 
-// निकासी एंडपॉइंट
+// निकासी एNDपॉइंट
 app.post('/withdraw', validateTransaction, (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -61,7 +61,7 @@ app.post('/withdraw', validateTransaction, (req, res) => {
   });
 });
 
-// चैट एंडपॉइंट (इन-मेमोरी स्टोरेज के साथ, MongoDB के बिना)
+// चैट एNDपॉइंट (इन-मेमोरी स्टोरेज के साथ, MongoDB के बिना)
 const chats = []; // इन-मेमोरी चैट स्टोरेज
 
 app.post('/chat', [
@@ -90,7 +90,7 @@ app.post('/chat', [
   });
 });
 
-// चैट हिस्ट्री प्राप्त करने के लिए GET एंडपॉइंट (ऑप्शनल)
+// चैट हिस्ट्री प्राप्त करने के लिए GET एNDपॉइंट (ऑप्शनल)
 app.get('/chat/history', (req, res) => {
   res.status(200).json({
     success: true,
