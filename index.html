@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <title>Fantasy King</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: linear-gradient(to right, #1e3c72, #2a5298); color: white; text-align: center; }
+        .container { max-width: 600px; margin: 20px auto; padding: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+        input, button { padding: 10px; margin: 5px; border-radius: 5px; border: none; }
+        button { background: #ff9800; color: white; cursor: pointer; }
+        #chatbox { height: 300px; overflow-y: scroll; background: rgba(0, 0, 0, 0.2); padding: 10px; border-radius: 5px; }
+        .section { margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fantasy King</h1>
+        
+        <div class="section">
+            <h2>साइन अप / लॉगिन</h2>
+            <input id="username" placeholder="Username">
+            <input id="password" type="password" placeholder="Password">
+            <button onclick="signup()">साइन अप</button>
+            <button onclick="login()">लॉगिन</button>
+        </div>
+
+        <div class="section">
+            <h2>डिपॉजिट / विड्रॉल</h2>
+            <input id="amount" type="number" placeholder="Amount">
+            <button onclick="deposit()">डिपॉजिट</button>
+            <button onclick="withdraw()">विड्रॉल</button>
+        </div>
+
+        <div class="section">
+            <h2>चैट सपोर्ट</h2>
+            <div id="chatbox"></div>
+            <input id="chatInput" placeholder="सवाल पूछें (जैसे: मेरी मदद करें)">
+            <button onclick="sendMessage()">भेजें</button>
+        </div>
+    </div>
+
+    <script>
+        const backendUrl = 'https://fantasy-king.onrender.com'; // Render URL से बदलें
+        const chatbox = document.getElementById('chatbox');
+
+        async function signup() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const response = await fetch(${backendUrl}/signup, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await response.json();
+            alert(data.message || data.error);
+        }
+
+        async function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const response = await fetch(${backendUrl}/login, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await response.json();
+            alert(data.message || data.error);
+        }
+
+        async function deposit() {
+            const username = document.getElementById('username').value;
+            const amount = parseInt(document.getElementById('amount').value);
+            const response = await fetch(${backendUrl}/deposit, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, amount })
+            });
+            const data = await response.json();
+            alert(data.message || data.error);
+        }
+
+        async function withdraw() {
+            const username = document.getElementById('username').value;
+            const amount = parseInt(document.getElementById('amount').value);
+            const response = await fetch(${backendUrl}/withdraw, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, amount })
+            });
+            const data = await response.json();
+            alert(data.message || data.error);
+        }
+
+        async function sendMessage() {
+            const message = document.getElementById('chatInput').value;
+            if (!message) return;
+            chatbox.innerHTML += <p><strong>आप:</strong> ${message}</p>;
+            const response = await fetch(${backendUrl}/chat, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message })
+            });
+            const data = await response.json();
+            chatbox.innerHTML += <p><strong>AI:</strong> ${data.reply}</p>;
+            document.getElementById('chatInput').value = '';
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+    </script>
+</body>
+</html>
