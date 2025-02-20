@@ -3,6 +3,7 @@ const { body, validationResult } = require('express-validator');
 
 const app = express();
 app.use(express.json());
+app.use(express.static('public')); // स्टैटिक फाइल्स सर्व करें
 
 // इन-मेमोरी उपयोगकर्ता डेटा (MongoDB के बिना)
 const users = {};
@@ -13,12 +14,12 @@ const validateTransaction = [
   body('amount').isFloat({ min: 0 }).withMessage('Amount must be a positive number')
 ];
 
-// **होम रूट (Fix for "Cannot GET /")**
+// *होम रूट (Fix for "Cannot GET /")*
 app.get('/', (req, res) => {
   res.send('Server is Running!');
 });
 
-// **जमा (Deposit) API**
+// *जमा (Deposit) API*
 app.post('/deposit', validateTransaction, (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -35,12 +36,12 @@ app.post('/deposit', validateTransaction, (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: `Deposited ${amount}. New balance: ${users[username].balance}`,
+    message: Deposited ${amount}. New balance: ${users[username].balance},
     balance: users[username].balance
   });
 });
 
-// **निकासी (Withdraw) API**
+// *निकासी (Withdraw) API*
 app.post('/withdraw', validateTransaction, (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -61,12 +62,12 @@ app.post('/withdraw', validateTransaction, (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: `Withdrawn ${amount}. New balance: ${users[username].balance}`,
+    message: Withdrawn ${amount}. New balance: ${users[username].balance},
     balance: users[username].balance
   });
 });
 
-// **चैट API (Chat)**
+// *चैट API (Chat)*
 const chats = []; // इन-मेमोरी चैट स्टोरेज
 
 app.post('/chat', [
@@ -95,7 +96,7 @@ app.post('/chat', [
   });
 });
 
-// **चैट हिस्ट्री API**
+// *चैट हिस्ट्री API*
 app.get('/chat/history', (req, res) => {
   res.status(200).json({
     success: true,
@@ -103,6 +104,6 @@ app.get('/chat/history', (req, res) => {
   });
 });
 
-// **सर्वर स्टार्ट**
+// *सर्वर स्टार्ट*
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(Server running on port ${PORT}));
